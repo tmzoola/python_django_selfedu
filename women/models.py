@@ -1,10 +1,12 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
 
 class Women(models.Model):
     title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
     content = models.TextField(blank=True)
     time_create = models.DateField(auto_now_add=True)
     time_update = models.DateField(auto_now=True)
@@ -19,3 +21,7 @@ class Women(models.Model):
         indexes = [
             models.Index(fields=['-time_create'])
         ]
+        
+    def get_absolute_url(self):
+        return reverse("post", kwargs={"post_slug": self.slug})
+    
