@@ -1,0 +1,12 @@
+{% if tags %}
+
+<p>Tags:</p>
+<ul class="tags-list">
+
+    {% for tag in tags %}
+    <li><a href="{% url "tag" tag.slug %}">{{tag.tag}}</a></li>
+    {% endfor %}
+
+</ul>
+
+{% endif %}

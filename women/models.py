@@ -19,7 +19,8 @@ class Women(models.Model):
     time_create = models.DateField(auto_now_add=True)
     time_update = models.DateField(auto_now=True)
     is_published = models.BooleanField(choices = Status.choices, default=Status.PUBLISHED)
-    cat = models.ForeignKey('Category', on_delete = models.PROTECT)
+    cat = models.ForeignKey('Category', on_delete = models.PROTECT, related_name='posts')
+    tags = models.ManyToManyField('TagPost', related_name="tags",blank=True) 
     
     objects = models.Manager()
     published = PublishedManager()
@@ -39,9 +40,17 @@ class Women(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length = 100, db_index = True)
-    slug = models.SlugField(max_length = 255, unique=True, db_index = True)
+    name = models.CharField(max_length=100, db_index = True)
+    slug = models.SlugField(max_length=255, unique=True, db_index = True)
     
     
     def __str__(self) -> str:
         return self.name
+    
+class TagPost(models.Model):
+    tag = models.CharField(max_length=100, db_index=True)
+    slug = models.SlugField(max_length=255, db_index = True,unique=True)
+    
+    
+    def __str__(self) -> str:
+        return self.tag

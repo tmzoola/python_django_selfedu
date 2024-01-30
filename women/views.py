@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render,redirect, get_object_or_404
 from django.urls import reverse
-from .models import Women
+from .models import Category, TagPost, Women
 
 
 menu = [{'title': "О сайте", 'url_name': 'about'},
@@ -15,12 +15,6 @@ data_db = [
      'is_published': True},
     {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
-]
-
-cats_db = [
-    {'id':1, 'name':'Acress'},
-    {'id':2, 'name':'Singers'},
-    {'id':3, 'name':'Sportswomen'},
 ]
 
 
@@ -56,6 +50,24 @@ def show_post(request, post_slug):
     
     return render(request, 'women/post.html', data)
 
+def show_tag_postlist(request, tag_slug):
+    tag = get_object_or_404(TagPost, slug=tag_slug)
+    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED)
+
+    
+    data = {
+        'title':f"Tag: {tag.tag}",
+        'menu':menu,
+        'posts':posts,
+        'cats_selected':None,
+    }
+
+    
+    return render(request, 'women/index.html', context=data)
+
+
+
+
 def addpage(request):
     return HttpResponse("Добавление статьи")
 
@@ -67,13 +79,16 @@ def contact(request):
 def login(request):
     return HttpResponse("Авторизация")
 
-def show_category(request, cat_id):
+def show_category(request, cat_slug):
+    category = get_object_or_404(Category, slug=cat_slug)
+    
+    posts = Women.objects.filter(cat_id=category.pk)
     
     data = {
-    'title': 'Главная страница',
+    'title': f'Category {category.name}',
     'menu': menu,
-    'posts':data_db,
-    'cats_selected':cat_id
+    'posts':posts,
+    'cats_selected':category.pk
     }
     
     return render(request, 'women/index.html', context=data)
