@@ -9,17 +9,10 @@ menu = [{'title': "О сайте", 'url_name': 'about'},
         {'title': "Обратная связь", 'url_name': 'contact'},
         {'title': "Войти", 'url_name': 'login'}
 ]
-data_db = [
-    {'id': 1, 'title': 'Анджелина Джоли', 'content': '''<h1>Анджелина Джоли</h1> (англ. Angelina Jolie[7], при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
-    Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
-     'is_published': True},
-    {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
-    {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
-]
 
 
 def index(request):
-    posts = Women.published.all()
+    posts = Women.published.all().select_related('cat')
     data = {
     'title': 'Главная страница',
     'menu': menu,
@@ -52,7 +45,7 @@ def show_post(request, post_slug):
 
 def show_tag_postlist(request, tag_slug):
     tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED)
+    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED).select_related('cat')
 
     
     data = {
@@ -65,24 +58,10 @@ def show_tag_postlist(request, tag_slug):
     
     return render(request, 'women/index.html', context=data)
 
-
-
-
-def addpage(request):
-    return HttpResponse("Добавление статьи")
-
-
-def contact(request):
-    return HttpResponse("Обратная связь")
-
-
-def login(request):
-    return HttpResponse("Авторизация")
-
 def show_category(request, cat_slug):
     category = get_object_or_404(Category, slug=cat_slug)
     
-    posts = Women.objects.filter(cat_id=category.pk)
+    posts = Women.objects.filter(cat_id=category.pk).select_related('cat')
     
     data = {
     'title': f'Category {category.name}',
@@ -92,6 +71,15 @@ def show_category(request, cat_slug):
     }
     
     return render(request, 'women/index.html', context=data)
+
+def addpage(request):
+    return HttpResponse("Добавление статьи")
+
+def contact(request):
+    return HttpResponse("Обратная связь")
+
+def login(request):
+    return HttpResponse("Авторизация")
 
 def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")

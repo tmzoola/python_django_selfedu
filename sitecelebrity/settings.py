@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-2$jm#p!uu5)e4s1!uq7-w0^-tns%u4b=vo1icxeobdz^+jj=ao
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
-
+INTERNAL_IPS = ["127.0.0.1"]
 
 # Application definition
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'women.apps.WomenConfig',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'sitecelebrity.urls'
