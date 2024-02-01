@@ -25,7 +25,6 @@ def about(request):
     data = {
     'title': 'About page',
     'menu': menu,
-    'posts':data_db
     }
     
     return render(request, 'women/about.html', context=data)
@@ -73,7 +72,12 @@ def show_category(request, cat_slug):
     return render(request, 'women/index.html', context=data)
 
 def addpage(request):
-    return HttpResponse("Добавление статьи")
+    print(request.GET)
+    data = {
+        'title': 'Add Page',
+        'menu':menu
+    }
+    return render(request, 'women/addpage.html',context=data)
 
 def contact(request):
     return HttpResponse("Обратная связь")
