@@ -1,6 +1,8 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render,redirect, get_object_or_404
 from django.urls import reverse
+
+from .forms import AddPostForm
 from .models import Category, TagPost, Women
 
 
@@ -72,10 +74,20 @@ def show_category(request, cat_slug):
     return render(request, 'women/index.html', context=data)
 
 def addpage(request):
-    print(request.GET)
+    if request.method == "POST":
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            try:
+                Women.objects.create(**form.cleaned_data)
+                return redirect('home')
+            except:
+                form.add_error(None,"Couldn't create women")
+    else:
+        form = AddPostForm()
     data = {
         'title': 'Add Page',
-        'menu':menu
+        'menu':menu,
+        'form':form
     }
     return render(request, 'women/addpage.html',context=data)
 

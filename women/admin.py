@@ -16,7 +16,7 @@ class MarriedFilter(admin.SimpleListFilter):
             return queryset.filter(husband__isnull=True)
 @admin.register(Women)
 class WomenAdmin(admin.ModelAdmin):
-    fields = ['title', 'content', 'cat','husband','tags']
+    fields = ['title', 'content', 'cat','husband','tags','slug']
     filter_horizontal = ['tags']
     list_display=('id', 'title', 'time_create', 'is_published','cat')
     list_display_links=('id', 'title')
