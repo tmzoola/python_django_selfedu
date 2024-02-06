@@ -1,3 +1,4 @@
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 from django.db.models.query import QuerySet
 from django.template.defaultfilters import slugify
@@ -15,7 +16,8 @@ class Women(models.Model):
         PUBLISHED = 1, 'Published'
     
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True,validators=[MinLengthValidator(5), MaxLengthValidator(100)])
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True, default=None, null=True,verbose_name='Profile Photo')
     content = models.TextField(blank=True)
     time_create = models.DateField(auto_now_add=True)
     time_update = models.DateField(auto_now=True)
@@ -71,3 +73,7 @@ class Husband(models.Model):
     m_count = models.IntegerField(blank=True, default=0)
     def __str__(self) -> str:
         return self.name
+
+
+class UploadFiles(models.Model):
+    file = models.FileField(upload_to='uploads_model')
